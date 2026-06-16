@@ -1,5 +1,5 @@
 -- Aurora UI Library - latest example
-local Aurora = loadstring(game:HttpGet("https://raw.githubusercontent.com/<OWNER>/<REPO>/main/src/Aurora.lua"))()
+local Aurora = loadstring(game:HttpGet("https://raw.githubusercontent.com/emirontop1/luau/main/src/Aurora.lua"))()
 
 local Window = Aurora:CreateWindow({
     Title = "Aurora Hub",
