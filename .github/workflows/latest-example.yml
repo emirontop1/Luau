@@ -1,0 +1,50 @@
+name: Latest Aurora Example
+
+on:
+  push:
+  pull_request:
+  workflow_dispatch:
+
+jobs:
+  publish-example:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Validate required files
+        run: |
+          test -s src/Aurora.lua
+          test -s examples/latest.lua
+          test -s examples/test_all_elements.lua
+          python3 scripts/validate.py
+
+      - name: Write latest example and loader to summary
+        shell: bash
+        run: |
+          REPO="${GITHUB_REPOSITORY}"
+          BRANCH="${GITHUB_REF_NAME}"
+          RAW_BASE="https://raw.githubusercontent.com/${REPO}/${BRANCH}"
+          {
+            echo "# Aurora latest example"
+            echo
+            echo "## Main loader"
+            echo '```lua'
+            echo "local Aurora = loadstring(game:HttpGet(\"${RAW_BASE}/src/Aurora.lua\"))()"
+            echo '```'
+            echo
+            echo "## Run latest example with loadstring"
+            echo '```lua'
+            echo "loadstring(game:HttpGet(\"${RAW_BASE}/examples/latest.lua\"))()"
+            echo '```'
+            echo
+            echo "## Full element smoke test loader"
+            echo '```lua'
+            echo "loadstring(game:HttpGet(\"${RAW_BASE}/examples/test_all_elements.lua\"))()"
+            echo '```'
+            echo
+            echo "## examples/latest.lua"
+            echo '```lua'
+            sed "s#<OWNER>/<REPO>#${REPO}#g" examples/latest.lua
+            echo '```'
+          } >> "$GITHUB_STEP_SUMMARY"
