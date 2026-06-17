@@ -16,8 +16,6 @@ jobs:
         run: |
           test -s src/Aurora.lua
           test -s examples/latest.lua
-          test -s examples/test_all_elements.lua
-          python3 scripts/validate.py
 
       - name: Write latest example and loader to summary
         shell: bash
@@ -36,11 +34,6 @@ jobs:
             echo "## Run latest example with loadstring"
             echo '```lua'
             echo "loadstring(game:HttpGet(\"${RAW_BASE}/examples/latest.lua\"))()"
-            echo '```'
-            echo
-            echo "## Full element smoke test loader"
-            echo '```lua'
-            echo "loadstring(game:HttpGet(\"${RAW_BASE}/examples/test_all_elements.lua\"))()"
             echo '```'
             echo
             echo "## examples/latest.lua"

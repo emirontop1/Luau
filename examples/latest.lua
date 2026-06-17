@@ -4,7 +4,6 @@ local Aurora = loadstring(game:HttpGet("https://raw.githubusercontent.com/emiron
 local Window = Aurora:CreateWindow({
     Title = "Aurora Hub",
     Name = "AuroraHub",
-    Theme = "Midnight",
 })
 
 local Main = Window:AddTab("Main")
@@ -12,7 +11,7 @@ local Player = Window:AddTab("Player")
 local Settings = Window:AddTab("Settings")
 
 local Combat = Main:AddSection("Combat")
-Combat:AddParagraph("Welcome", "Clean Luau GUI components with safe callbacks, live themes, and a draggable window.")
+Combat:AddParagraph("Welcome", "Clean Luau GUI components with safe callbacks and a draggable window.")
 Combat:AddButton({
     Text = "Show notification",
     Callback = function()
@@ -52,17 +51,10 @@ Movement:AddTextbox({
 local Config = Settings:AddSection("Config")
 Config:AddDropdown({
     Text = "Theme",
-    Values = { "Aurora", "Dark", "Midnight", "Emerald" },
-    Default = "Midnight",
+    Values = { "Aurora", "Dark", "Purple" },
+    Default = "Aurora",
     Callback = function(theme)
-        Window:SetTheme(theme)
-        Window:Notify({ Title = "Theme", Text = "Theme changed to " .. tostring(theme) })
+        print("Theme selected:", theme)
     end,
 })
-Config:AddButton({
-    Text = "Pink Accent",
-    Callback = function()
-        Window:SetAccent(Color3.fromRGB(236, 72, 153))
-    end,
-})
-Config:AddLabel("Loader uses emirontop1/luau and always pulls src/Aurora.lua from main.")
+Config:AddLabel("Tip: replace <OWNER>/<REPO> with your GitHub repository path.")
