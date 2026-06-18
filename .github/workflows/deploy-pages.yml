@@ -1,0 +1,64 @@
+name: Deploy LuaBank to GitHub Pages
+
+on:
+  push:
+    branches:
+      - main
+  pull_request:
+  workflow_dispatch:
+
+permissions:
+  # Only branch writes are needed. Do not add pages/id-token permissions here;
+  # those are for the Pages REST API path that failed with Resource not accessible.
+  contents: write
+
+concurrency:
+  group: pages
+  cancel-in-progress: false
+
+jobs:
+  validate:
+    name: Validate static site
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v5
+
+      - name: Validate LuaBank website files
+        run: python3 scripts/validate.py
+
+  build-and-publish:
+    name: Build site and publish branch
+    runs-on: ubuntu-latest
+    needs: validate
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v5
+
+      - name: Prepare static site
+        run: |
+          rm -rf _site
+          mkdir -p _site
+          cp index.html styles.css script.js _site/
+          touch _site/.nojekyll
+
+      - name: Publish to gh-pages branch
+        # This intentionally avoids the configure/deploy Pages actions.
+        # The Pages REST API cannot enable Pages when GITHUB_TOKEN lacks repository admin access.
+        if: github.event_name != 'pull_request'
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          set -euo pipefail
+          git config --global user.name "github-actions[bot]"
+          git config --global user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          rm -rf /tmp/luabank-pages
+          mkdir -p /tmp/luabank-pages
+          cp -R _site/. /tmp/luabank-pages/
+          cd /tmp/luabank-pages
+          git init
+          git checkout -b gh-pages
+          git add .
+          git commit -m "Deploy LuaBank site"
+          git remote add origin "https://x-access-token:${GITHUB_TOKEN}@github.com/${GITHUB_REPOSITORY}.git"
+          git push --force origin gh-pages

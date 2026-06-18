@@ -1,30 +1,45 @@
-# Aurora Luau UI Library
+# LuaBank Obfuscator Website
 
-Aurora is a clean, dependency-free Roblox/Luau GUI library. It includes a draggable window, tabs, sections, labels, paragraphs, buttons, toggles, sliders, textboxes, dropdowns, and notifications.
+LuaBank replaces the old FL direction with a high-impact Lua obfuscator and Lua script bank landing page. It is a static, deployable website with a client-side obfuscation demo, script-vault positioning, key-system copy, and pricing sections.
 
-## Loader
+## What changed
 
-Replace `<OWNER>/<REPO>` with your GitHub repository path:
+- **Lua obfuscator demo:** paste Lua and generate protected-looking output in the browser.
+- **Lua bank:** market scripts as a vault/library for loaders, releases, changelogs, and buyer access.
+- **Key-system focus:** copy and layout inspired by whitelist/key platforms such as Luarmor, with clear notes that real hardened obfuscation should run through a server-side pipeline.
+- **GitHub Pages deployment:** pushes to `main` run GitHub Actions validation, package `index.html`, `styles.css`, and `script.js`, then publish the built site to a `gh-pages` branch.
 
-```lua
-local Aurora = loadstring(game:HttpGet("https://raw.githubusercontent.com/<OWNER>/<REPO>/main/src/Aurora.lua"))()
+## Run locally
+
+Open `index.html` directly, or serve the folder:
+
+```bash
+python3 -m http.server 8000
 ```
 
-## Latest Example
+Then visit <http://localhost:8000>.
 
-See [`examples/latest.lua`](examples/latest.lua) for the newest full example. The GitHub Actions workflow also prints the latest example and ready-to-copy loader snippets in the workflow summary.
+## Deploy on GitHub Pages
 
-## Quick API
+This workflow uses classic branch-based GitHub Pages deployment instead of the Pages REST API. That avoids `actions/configure-pages` failures like `Resource not accessible by integration` on repositories where the workflow token cannot create/enable Pages.
 
-```lua
-local Window = Aurora:CreateWindow({ Title = "Aurora Hub" })
-local Main = Window:AddTab("Main")
-local Section = Main:AddSection("Features")
+1. In the repository, open **Settings → Pages**.
+2. Set **Build and deployment → Source** to **Deploy from a branch**.
+3. Choose the `gh-pages` branch and `/ (root)` folder.
+4. Push to `main` or run **Deploy LuaBank to GitHub Pages** manually from the Actions tab.
+5. Pull requests validate and build the site artifact, but only non-PR runs force-push the built files to `gh-pages`.
 
-Section:AddButton({ Text = "Click", Callback = function() print("Clicked") end })
-Section:AddToggle({ Text = "Enabled", Default = true, Callback = function(value) print(value) end })
-Section:AddSlider({ Text = "Speed", Min = 16, Max = 100, Default = 24, Callback = print })
-Section:AddTextbox({ Placeholder = "Input", SubmitOnFocusLost = true, Callback = print })
-Section:AddDropdown({ Text = "Mode", Values = { "A", "B" }, Callback = print })
-Window:Notify({ Title = "Aurora", Text = "Ready" })
+### Why this does not use `actions/configure-pages`
+
+The error below happens when the workflow tries to create or enable GitHub Pages through the Pages REST API, but the default `GITHUB_TOKEN` does not have repository admin access:
+
+```text
+Run actions/configure-pages@v6
+Error: Create Pages site failed. Error: Resource not accessible by integration
 ```
+
+This repository now avoids that API path completely. The workflow builds the static files and pushes them to `gh-pages`; GitHub Pages only needs to be configured once to serve from that branch.
+
+## Research notes
+
+During the redesign, current Lua protection platforms were reviewed for common expectations: automatic obfuscation, whitelist/key checks, ad-link/key monetization, local privacy claims, and script verification/review workflows. The site uses those patterns as product inspiration without copying vendor source or branding.
