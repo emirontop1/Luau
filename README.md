@@ -7,7 +7,6 @@ LuaBank replaces the old FL direction with a high-impact Lua obfuscator and Lua 
 - **Lua obfuscator demo:** paste Lua and generate protected-looking output in the browser.
 - **Lua bank:** market scripts as a vault/library for loaders, releases, changelogs, and buyer access.
 - **Key-system focus:** copy and layout inspired by whitelist/key platforms such as Luarmor, with clear notes that real hardened obfuscation should run through a server-side pipeline.
-- **GitHub Pages deployment:** pushes to `main` run GitHub Actions validation, package `index.html`, `styles.css`, and `script.js`, then publish the built site to a `gh-pages` branch.
 
 ## Run locally
 
@@ -18,27 +17,6 @@ python3 -m http.server 8000
 ```
 
 Then visit <http://localhost:8000>.
-
-## Deploy on GitHub Pages
-
-This workflow uses classic branch-based GitHub Pages deployment instead of the Pages REST API. That avoids `actions/configure-pages` failures like `Resource not accessible by integration` on repositories where the workflow token cannot create/enable Pages.
-
-1. In the repository, open **Settings → Pages**.
-2. Set **Build and deployment → Source** to **Deploy from a branch**.
-3. Choose the `gh-pages` branch and `/ (root)` folder.
-4. Push to `main` or run **Deploy LuaBank to GitHub Pages** manually from the Actions tab.
-5. Pull requests validate and build the site artifact, but only non-PR runs force-push the built files to `gh-pages`.
-
-### Why this does not use `actions/configure-pages`
-
-The error below happens when the workflow tries to create or enable GitHub Pages through the Pages REST API, but the default `GITHUB_TOKEN` does not have repository admin access:
-
-```text
-Run actions/configure-pages@v6
-Error: Create Pages site failed. Error: Resource not accessible by integration
-```
-
-This repository now avoids that API path completely. The workflow builds the static files and pushes them to `gh-pages`; GitHub Pages only needs to be configured once to serve from that branch.
 
 ## Research notes
 
