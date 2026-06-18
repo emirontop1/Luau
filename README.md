@@ -1,30 +1,32 @@
-# Aurora Luau UI Library
+# LuaBank Obfuscator Website
 
-Aurora is a clean, dependency-free Roblox/Luau GUI library. It includes a draggable window, tabs, sections, labels, paragraphs, buttons, toggles, sliders, textboxes, dropdowns, and notifications.
+LuaBank replaces the old FL direction with a high-impact Lua obfuscator and Lua script bank landing page. It is a static, deployable website with a client-side obfuscation demo, script-vault positioning, key-system copy, and pricing sections.
 
-## Loader
+## What changed
 
-Replace `<OWNER>/<REPO>` with your GitHub repository path:
+- **Lua obfuscator demo:** paste Lua and generate protected-looking output in the browser.
+- **Lua bank:** market scripts as a vault/library for loaders, releases, changelogs, and buyer access.
+- **Key-system focus:** copy and layout inspired by whitelist/key platforms such as Luarmor, with clear notes that real hardened obfuscation should run through a server-side pipeline.
+- **GitHub Pages deployment:** pushes to `main` run GitHub Actions validation, package `index.html`, `styles.css`, and `script.js`, then deploy the site to GitHub Pages.
 
-```lua
-local Aurora = loadstring(game:HttpGet("https://raw.githubusercontent.com/<OWNER>/<REPO>/main/src/Aurora.lua"))()
+## Run locally
+
+Open `index.html` directly, or serve the folder:
+
+```bash
+python3 -m http.server 8000
 ```
 
-## Latest Example
+Then visit <http://localhost:8000>.
 
-See [`examples/latest.lua`](examples/latest.lua) for the newest full example. The GitHub Actions workflow also prints the latest example and ready-to-copy loader snippets in the workflow summary.
+## Deploy on GitHub Pages
 
-## Quick API
+1. In the repository, open **Settings → Pages**.
+2. Set **Build and deployment → Source** to **GitHub Actions**. If it has not been enabled yet, the workflow also passes `enablement: true` to `actions/configure-pages@v6` so GitHub can create/enable the Pages site during deployment.
+3. Push to `main` or run **Deploy LuaBank to GitHub Pages** manually from the Actions tab.
+4. Pull requests validate and build the Pages artifact, but only non-PR runs deploy.
+5. The workflow uses the current Pages action majors (`configure-pages@v6`, `upload-pages-artifact@v5`, and `deploy-pages@v5`) so it does not opt back into insecure Node 20 execution.
 
-```lua
-local Window = Aurora:CreateWindow({ Title = "Aurora Hub" })
-local Main = Window:AddTab("Main")
-local Section = Main:AddSection("Features")
+## Research notes
 
-Section:AddButton({ Text = "Click", Callback = function() print("Clicked") end })
-Section:AddToggle({ Text = "Enabled", Default = true, Callback = function(value) print(value) end })
-Section:AddSlider({ Text = "Speed", Min = 16, Max = 100, Default = 24, Callback = print })
-Section:AddTextbox({ Placeholder = "Input", SubmitOnFocusLost = true, Callback = print })
-Section:AddDropdown({ Text = "Mode", Values = { "A", "B" }, Callback = print })
-Window:Notify({ Title = "Aurora", Text = "Ready" })
-```
+During the redesign, current Lua protection platforms were reviewed for common expectations: automatic obfuscation, whitelist/key checks, ad-link/key monetization, local privacy claims, and script verification/review workflows. The site uses those patterns as product inspiration without copying vendor source or branding.
